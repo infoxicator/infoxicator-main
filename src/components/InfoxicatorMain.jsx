@@ -1,16 +1,20 @@
 import React from 'react';
 import { holocronModule } from 'holocron';
 import PropTypes from 'prop-types';
+import { Link } from '@americanexpress/one-app-router';
 import reducer, { REQUEST, SUCCESS, FAILURE } from '../duck';
 import BlogPost from './BlogPost';
 
 const InfoxicatorMain = ({ moduleState }) => {
-  if (moduleState.isLoading) return <h1>Loading...</h1>;
+  if (moduleState.isLoading) return <div className="button is-loading">Loading</div>;
   if (moduleState.error) return <h1>Something went wrong...</h1>;
   return (
-    <ul>
-      {moduleState.data.posts.map((post) => <li key={post.id}><h1><BlogPost post={post} /></h1></li>)}
-    </ul>
+    <div className="container is-fluid">
+      <ul style={{ marginTop: '1rem' }}>
+        {moduleState.data.posts.map(
+          (post) => <li key={post.id}><Link to={post.slug}><BlogPost post={post} /></Link></li>)}
+      </ul>
+    </div>
   );
 };
 InfoxicatorMain.loadModuleData = async ({ store, fetchClient }) => {
@@ -18,7 +22,6 @@ InfoxicatorMain.loadModuleData = async ({ store, fetchClient }) => {
   try {
     const fastRes = await fetchClient('http://www.infoxication.net/wp-json/wp/v2/posts/');
     const posts = await fastRes.json();
-    console.log(posts);
     store.dispatch({
       type: SUCCESS,
       data: {
@@ -37,7 +40,7 @@ InfoxicatorMain.propTypes = {
   moduleState: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     isComplete: PropTypes.bool.isRequired,
-    data: PropTypes.shape({}),
+    data: PropTypes.shape({ posts: PropTypes.array }),
     error: PropTypes.shape({}),
   }).isRequired,
 };
