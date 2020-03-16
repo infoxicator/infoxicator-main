@@ -8,11 +8,14 @@ const createMarkup = (markup) => ({ __html: markup });
 const BlogPost = ({ post }) => (
   <div className="box" style={{ marginBottom: '1rem' }}>
     <div className="media">
-      <div className="media-left">
-        <figure className="image is-128x128">
-          <img src={post.better_featured_image.source_url} alt="post preview" />
-        </figure>
-      </div>
+      {post.better_featured_image && post.better_featured_image.source_url
+        && (
+        <div className="media-left">
+          <figure className="image is-128x128">
+            <img src={post.better_featured_image.source_url} alt="post preview" />
+          </figure>
+        </div>
+        )}
       <div className="media-content">
         <p className="title is-3">{post.title.rendered}</p>
         <p className="subtitle is-6">{dayjs(post.date).format('MMMM DD, YYYY')}</p>
