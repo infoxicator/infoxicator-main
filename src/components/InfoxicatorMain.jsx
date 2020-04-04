@@ -1,5 +1,4 @@
 import React from 'react';
-import { holocronModule } from 'holocron';
 import PropTypes from 'prop-types';
 import { Link } from '@americanexpress/one-app-router';
 import reducer, { REQUEST, SUCCESS, FAILURE } from '../duck';
@@ -7,17 +6,27 @@ import BlogPost from './BlogPost';
 
 const InfoxicatorMain = ({ moduleState }) => {
   if (moduleState.isLoading) return <div className="button is-loading">Loading</div>;
-  if (moduleState.error) return <h1>Something went wrong...</h1>;
-  return (
-    <div className="container is-fluid">
-      <ul style={{ marginTop: '1rem' }}>
-        {moduleState.data.posts.map(
-          (post) => <li key={post.id}><Link to={post.slug}><BlogPost post={post} /></Link></li>)}
-      </ul>
-    </div>
-  );
+  if (moduleState.data) {
+    return (
+      <div className="container is-fluid">
+        <ul style={{ marginTop: '1rem' }}>
+          {
+        moduleState.data.posts.map(
+          (post) => <li key={post.id}><Link to={post.slug}><BlogPost post={post} /></Link></li>)
+        }
+        </ul>
+      </div>
+    );
+  }
+  return <h1>Something went wrong...</h1>;
 };
-InfoxicatorMain.loadModuleData = async ({ store, fetchClient }) => {
+
+const loadModuleData = async ({ store, fetchClient }) => {
+  const moduleState = store.getState().getIn(['modules', 'infoxicator-main']);
+  // If isComplete and data already exists dont run request again
+  if (moduleState.get('isComplete') && moduleState.get('data')) {
+    return;
+  }
   store.dispatch({ type: REQUEST });
   try {
     const fastRes = await fetchClient('http://www.infoxication.net/wp-json/wp/v2/posts/');
@@ -45,7 +54,10 @@ InfoxicatorMain.propTypes = {
   }).isRequired,
 };
 
-export default holocronModule({
+InfoxicatorMain.holocron = {
   name: 'infoxicator-main',
   reducer,
-})(InfoxicatorMain);
+  loadModuleData,
+};
+
+export default InfoxicatorMain;
