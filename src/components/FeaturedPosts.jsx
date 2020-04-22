@@ -1,15 +1,17 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
 import FeaturedPost from './FeaturedPost';
 
-const BlogPost = ({ posts, hideImage }) => (
-  <Grid container={true} spacing={4}>
-    {posts.map((post) => (
-      <FeaturedPost key={post.id} post={post} hideImage={hideImage} />
-    ))}
-  </Grid>
+const BlogPost = ({ posts, postTitle }) => (
+  <React.Fragment>
+    { postTitle && (<h2 className="title">{ postTitle }</h2>)}
+    <ul className="list-unstyled">
+      {posts.map((post) => (
+        <FeaturedPost key={post.id} post={post} />
+      ))}
+    </ul>
+  </React.Fragment>
 );
 
 BlogPost.propTypes = {

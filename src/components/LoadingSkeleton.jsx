@@ -1,14 +1,13 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import CardSkeleton from './CardSkeleton';
 
 const LoadingSkeleton = () => (
-  <Grid container={true} spacing={4}>
+  <React.Fragment>
     <CardSkeleton />
     <CardSkeleton />
     <CardSkeleton />
     <CardSkeleton />
-  </Grid>
+  </React.Fragment>
 );
 
 export default LoadingSkeleton;

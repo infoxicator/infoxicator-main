@@ -6,14 +6,15 @@ import { queryProcedureResult } from 'iguazu-rpc';
 import reducer from '../duck';
 import FeaturedPosts from './FeaturedPosts';
 import LoadingSkeleton from './LoadingSkeleton';
+import '../App.scss';
 
 const InfoxicatorMain = ({
-  isLoading, loadedWithErrors, posts, hideImage,
+  isLoading, loadedWithErrors, posts, postTitle,
 }) => {
   if (isLoading()) return <LoadingSkeleton />;
   if (loadedWithErrors()) return <h1>Something went wrong...</h1>;
   return (
-    <FeaturedPosts posts={posts} hideImage={hideImage} />
+    <FeaturedPosts posts={posts} postTitle={postTitle} />
   );
 };
 
