@@ -38,6 +38,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0",
+    "react-scroll-parallax": "^2.3.2",
     "redux": "^4.0.5",
     "redux-immutable": "^4.0.0"
   },
