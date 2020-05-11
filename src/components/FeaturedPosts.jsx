@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FeaturedPost from './FeaturedPost';
 
-const BlogPost = ({ posts, postTitle }) => (
+const BlogPost = ({ posts, postTitle, filter }) => (
   <React.Fragment>
     { postTitle && (<h2 className="title">{ postTitle }</h2>)}
     <ul className="list-unstyled">
-      {posts.map((post) => (
+      { posts.filter((post) => post.slug !== filter).map((post) => (
         <FeaturedPost key={post.id} post={post} />
       ))}
     </ul>
