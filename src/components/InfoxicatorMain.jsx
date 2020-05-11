@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import { withRouter } from '@americanexpress/one-app-router';
 import { compose } from 'redux';
+import SEO from '@americanexpress/react-seo';
 import reducer from '../duck';
 import FeaturedPosts from './FeaturedPosts';
 import LoadingSkeleton from './LoadingSkeleton';
@@ -19,13 +20,19 @@ const InfoxicatorMain = ({
   if (isLoading()) return <LoadingSkeleton />;
   if (loadedWithErrors()) return <h1>Something went wrong...</h1>;
   return (
-    <main>
+    <React.Fragment>
+      <SEO
+        author="Ruben Casas"
+        description="Learn microfrontends patterns in React 💠💠💠"
+        keywords={['react', 'tutorial', 'microfrontend', 'holocron']}
+        lang="en-GB"
+        meta={[{ charset: 'utf-8' }]}
+      />
       <ParallaxProvider> { !postTitle && <HeroImage /> }</ParallaxProvider>
       <Container fluid="md" className="mt-5">
         <FeaturedPosts posts={posts} postTitle={postTitle} filter={pathname.replace(/\//g, '')} />
       </Container>
-    </main>
-
+    </React.Fragment>
   );
 };
 
