@@ -1,51 +1,69 @@
 import React from 'react';
-import { holocronModule } from 'holocron';
+import { configureIguazuSSR } from 'iguazu-holocron';
+import { connectAsync } from 'iguazu';
 import PropTypes from 'prop-types';
-import { Link } from '@americanexpress/one-app-router';
-import reducer, { REQUEST, SUCCESS, FAILURE } from '../duck';
-import BlogPost from './BlogPost';
+import { queryProcedureResult } from 'iguazu-rpc';
+import Container from 'react-bootstrap/Container';
+import { ParallaxProvider } from 'react-scroll-parallax';
+import { withRouter } from '@americanexpress/one-app-router';
+import { compose } from 'redux';
+import SEO from '@americanexpress/react-seo';
+import reducer from '../duck';
+import FeaturedPosts from './FeaturedPosts';
+import LoadingSkeleton from './LoadingSkeleton';
+import '../App.scss';
+import HeroImage from './HeroImage';
 
-const InfoxicatorMain = ({ moduleState }) => {
-  if (moduleState.isLoading) return <div className="button is-loading">Loading</div>;
-  if (moduleState.error) return <h1>Something went wrong...</h1>;
+const InfoxicatorMain = ({
+  isLoading, loadedWithErrors, posts, postTitle, router: { location: { pathname } },
+}) => {
+  if (isLoading()) return <LoadingSkeleton />;
+  if (loadedWithErrors()) return <h1>Something went wrong...</h1>;
   return (
-    <div className="container is-fluid">
-      <ul style={{ marginTop: '1rem' }}>
-        {moduleState.data.posts.map(
-          (post) => <li key={post.id}><Link to={post.slug}><BlogPost post={post} /></Link></li>)}
-      </ul>
-    </div>
+    <React.Fragment>
+      <SEO
+        author="Ruben Casas"
+        description="Learn microfrontends patterns in React 💠💠💠"
+        keywords={['react', 'tutorial', 'microfrontend', 'holocron']}
+        lang="en-GB"
+        meta={[{ charset: 'utf-8' }]}
+      />
+      <ParallaxProvider> { !postTitle && <HeroImage /> }</ParallaxProvider>
+      <Container fluid="md" className="mt-5">
+        <FeaturedPosts posts={posts} postTitle={postTitle} filter={pathname.replace(/\//g, '')} />
+      </Container>
+    </React.Fragment>
   );
 };
-InfoxicatorMain.loadModuleData = async ({ store, fetchClient }) => {
-  store.dispatch({ type: REQUEST });
-  try {
-    const fastRes = await fetchClient('http://www.infoxication.net/wp-json/wp/v2/posts/');
-    const posts = await fastRes.json();
-    store.dispatch({
-      type: SUCCESS,
-      data: {
-        posts,
-      },
-    });
-  } catch (err) {
-    store.dispatch({
-      type: FAILURE,
-      error: err,
-    });
-  }
-};
+
+function loadDataAsProps({ store: { dispatch } }) {
+  const apiUrl = 'https://www.infoxication.net/wp-json/wp/v2/posts/';
+  return {
+    posts: () => dispatch(queryProcedureResult({ procedureName: 'readPosts', args: { api: apiUrl } })),
+  };
+}
+
+loadDataAsProps.ssr = true;
+InfoxicatorMain.loadDataAsProps = loadDataAsProps;
+
+if (!global.BROWSER) {
+  InfoxicatorMain.loadModuleData = configureIguazuSSR;
+}
 
 InfoxicatorMain.propTypes = {
-  moduleState: PropTypes.shape({
-    isLoading: PropTypes.bool.isRequired,
-    isComplete: PropTypes.bool.isRequired,
-    data: PropTypes.shape({ posts: PropTypes.array }),
-    error: PropTypes.shape({}),
-  }).isRequired,
+  isLoading: PropTypes.func.isRequired,
+  loadedWithErrors: PropTypes.func.isRequired,
+  posts: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default holocronModule({
+InfoxicatorMain.defaultProps = { posts: [] };
+
+InfoxicatorMain.holocron = {
   name: 'infoxicator-main',
   reducer,
-})(InfoxicatorMain);
+};
+
+export default compose(
+  connectAsync({ loadDataAsProps }),
+  withRouter
+)(InfoxicatorMain);

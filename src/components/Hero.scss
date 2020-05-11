@@ -1,0 +1,53 @@
+
+  :local(.root) {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: black;
+    border: solid 5px #000;
+    border-bottom-right-radius: 150px 50px;
+    border-bottom-left-radius: 150px 50px;
+}
+:local(.scroll) {
+    color: white;
+    text-align: center;
+    font-size: 2.75rem;
+    line-height: 1.25;
+    font-weight: 900;
+    max-width: 20rem;
+}
+:local(.holocron) {
+    width: 200px;
+    height: 200px
+}
+@media only screen and (min-width : 768px) {
+
+    :local(.root) {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: black;
+        border: solid 5px #000;
+        border-bottom-right-radius: 150px 50px;
+        border-bottom-left-radius: 150px 50px;
+    }
+    :local(.scroll) {
+        color: white;
+        text-align: center;
+        font-size: 3.75rem;
+        line-height: 1.25;
+        max-width: 24rem;
+        margin-right: 3rem;
+        font-weight: 900;
+    }
+    :local(.holocron) {
+        width: 300px;
+        height: 300px
+    }
+}
+
+
