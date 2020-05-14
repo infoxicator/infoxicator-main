@@ -4,8 +4,8 @@ on:
   release:
     types: [created]
   push:
-    branches:
-      - master
+    branches-ignore:
+      - '**'
 
 jobs:
   deploy:
