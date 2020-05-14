@@ -5,9 +5,9 @@ const { name, version } = require('../package.json');
 // This is created during the build process within the deploy action
 const bundleIntegrity = require('../bundle.integrity.manifest.json');
 
-const moduleMapUrl = 'https://infoxicator-map.now.sh/'; // This is the module map URL you got in the previous step
+const moduleMapUrl = 'https://infoxicator-map.now.sh'; // This is the module map URL you got in the previous step
 
-const STATIC_ASSETS_URL = 'https://infoxicator-main.now.sh/'; // example 'https://my-module.now.sh'
+const STATIC_ASSETS_URL = 'https://infoxicator-main.now.sh'; // example 'https://my-module.now.sh'
 
 const updateModuleMap = async () => {
   try {
