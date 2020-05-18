@@ -8,7 +8,7 @@ const HeroImage = () => (
     <p className={style.scroll}>Microfrontends Unleashed</p>
     <div className={style.container}>
       <Parallax className="custom-class" y={[-25, 25]} tagOuter="figure">
-        <Image className={style.holocron} src="https://www.infoxication.net/wp-content/uploads/2020/05/ezgif.com-gif-maker.gif" />
+        <Image className={style.holocron} src="https://www.infoxication.net/wp-content/uploads/2020/05/holocron.gif" />
       </Parallax>
     </div>
   </div>
