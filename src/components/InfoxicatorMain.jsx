@@ -1,23 +1,20 @@
 import React from 'react';
-import { configureIguazuSSR } from 'iguazu-holocron';
-import { connectAsync } from 'iguazu';
 import PropTypes from 'prop-types';
-import { queryProcedureResult } from 'iguazu-rpc';
 import Container from 'react-bootstrap/Container';
 import { ParallaxProvider } from 'react-scroll-parallax';
 import { withRouter } from '@americanexpress/one-app-router';
-import { compose } from 'redux';
-import reducer from '../duck';
+import reducer, { REQUEST, SUCCESS, FAILURE } from '../duck';
 import FeaturedPosts from './FeaturedPosts';
 import LoadingSkeleton from './LoadingSkeleton';
 import '../App.scss';
 import HeroImage from './HeroImage';
 
 const InfoxicatorMain = ({
-  isLoading, loadedWithErrors, posts, postTitle, router: { location: { pathname } },
+  moduleState, postTitle, router: { location: { pathname } },
 }) => {
-  if (isLoading()) return <LoadingSkeleton />;
-  if (loadedWithErrors()) return <h1>Something went wrong...</h1>;
+  const { isLoading, error, posts } = moduleState;
+  if (isLoading && posts.length === 0) return <LoadingSkeleton />;
+  if (error) return <h1>Something went wrong...</h1>;
   return (
     <React.Fragment>
       <ParallaxProvider> { !postTitle && <HeroImage /> }</ParallaxProvider>
@@ -28,23 +25,30 @@ const InfoxicatorMain = ({
   );
 };
 
-function loadDataAsProps({ store: { dispatch } }) {
+const loadModuleData = async ({ store: { dispatch, getState }, fetchClient }) => {
   const apiUrl = 'https://www.infoxication.net/wp-json/wp/v2/posts/';
-  return {
-    posts: () => dispatch(queryProcedureResult({ procedureName: 'readPosts', args: { api: apiUrl } })),
-  };
-}
+  // const moduleState = getState().getIn(['modules', 'infoxicator-main']);
+  // if (moduleState.get('isComplete') && moduleState.get('posts')) {
+  //   return;
+  // }
+  try {
+    dispatch({ type: REQUEST });
+    const response = await fetchClient(apiUrl);
+    const posts = await response.json();
+    dispatch({
+      type: SUCCESS,
+      posts,
+    });
+  } catch (err) {
+    dispatch({
+      type: FAILURE,
+      error: err,
+    });
+  }
+};
 
-loadDataAsProps.ssr = true;
-InfoxicatorMain.loadDataAsProps = loadDataAsProps;
-
-if (!global.BROWSER) {
-  InfoxicatorMain.loadModuleData = configureIguazuSSR;
-}
 
 InfoxicatorMain.propTypes = {
-  isLoading: PropTypes.func.isRequired,
-  loadedWithErrors: PropTypes.func.isRequired,
   posts: PropTypes.arrayOf(PropTypes.object),
 };
 
@@ -53,9 +57,7 @@ InfoxicatorMain.defaultProps = { posts: [] };
 InfoxicatorMain.holocron = {
   name: 'infoxicator-main',
   reducer,
+  loadModuleData,
 };
 
-export default compose(
-  connectAsync({ loadDataAsProps }),
-  withRouter
-)(InfoxicatorMain);
+export default withRouter(InfoxicatorMain);
