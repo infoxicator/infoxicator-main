@@ -5,10 +5,10 @@ import style from './Hero.scss';
 
 const HeroImage = () => (
   <div className={style.root}>
-    <p className={style.scroll}>Microfrontends Unleashed</p>
+    <p className={style.scroll}>Micro Frontends Unleashed</p>
     <div className={style.container}>
       <Parallax className="custom-class" y={[-25, 25]} tagOuter="figure">
-        <Image className={style.holocron} src="https://www.infoxication.net/wp-content/uploads/2020/05/holocron.gif" />
+        <Image className={style.holocron} src="https://www.infoxication.net/wp-content/uploads/2020/05/holocron.gif" alt="holocron" />
       </Parallax>
     </div>
   </div>

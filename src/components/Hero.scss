@@ -1,5 +1,5 @@
 
-  :local(.root) {
+  .root {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
@@ -10,7 +10,7 @@
     border-bottom-right-radius: 150px 50px;
     border-bottom-left-radius: 150px 50px;
 }
-:local(.scroll) {
+.scroll {
     color: white;
     text-align: center;
     font-size: 2.75rem;
@@ -18,13 +18,13 @@
     font-weight: 600;
     max-width: 20rem;
 }
-:local(.holocron) {
+.holocron {
     width: 200px;
     height: 200px
 }
 @media only screen and (min-width : 768px) {
 
-    :local(.root) {
+    .root {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
@@ -35,16 +35,16 @@
         border-bottom-right-radius: 150px 50px;
         border-bottom-left-radius: 150px 50px;
     }
-    :local(.scroll) {
+    .scroll {
         color: white;
         text-align: center;
         font-size: 3.75rem;
         line-height: 1.25;
-        max-width: 24rem;
+        max-width: 28rem;
         margin-right: 3rem;
         font-weight: 700;
     }
-    :local(.holocron) {
+    .holocron {
         width: 300px;
         height: 300px
     }
